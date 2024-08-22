@@ -32,7 +32,7 @@ L'objectif est de configurer un RAID 1 sur les deux nouveaux disques de 15 Go af
 ### 3.2 Partitionnement des disques
 
 1. Connectez-vous à la machine virtuelle via SSH ou via la console Proxmox.
-2. Utilisez `fdisk` ou `parted` pour partitionner les deux nouveaux disques de 15 Go de manière identique à celle du disque de 30 Go.
+2. Utilisez `fdisk` pour partitionner les deux nouveaux disques de 15 Go de manière identique à celle du disque de 30 Go.
 
    ```bash
    fdisk /dev/sdX
