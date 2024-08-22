@@ -96,4 +96,81 @@ Capture d'écran des 3 premières étapes :
 
 ![3_supraid](https://github.com/user-attachments/assets/ca09cf68-c116-4f22-9153-6909ef0de4c5)
 
+## 4. Supprimer les partitions RAID et recréer des partitions classiques
+
+### 4.1 Supprimer les partitions RAID existantes
+Après avoir supprimé les superblocs RAID, vous pouvez maintenant supprimer les partitions RAID sur les disques `sda` et `sdb`.
+
+1. **Lancer `fdisk` pour gérer les partitions sur `sda`** :
+   
+   ```bash
+   fdisk /dev/sda
+
+Lorsque vous lancez `fdisk`, vous accédez à une interface interactive qui vous permet de gérer les partitions sur le disque sélectionné (`/dev/sda` dans ce cas).
+
+## Étape 4.2 : Supprimer les partitions existantes
+
+### Lister les partitions :
+
+Tapez `p` dans l'interface `fdisk` pour afficher la table de partitions actuelle. Cela vous permet de voir quelles partitions sont présentes sur le disque.
+
+### Supprimer les partitions :
+
+- Tapez `d` pour supprimer une partition.
+- `fdisk` vous demandera de spécifier le numéro de la partition à supprimer. Si plusieurs partitions existent, vous devrez répéter cette étape pour chaque partition (`sda1`, `sda2`, `sda3`, etc.).
+
+Voici la procédure suivie pour la suppression des partitions de sdb :
+
+```bash
+root@SRV-DEB:/# fdisk /dev/sdb
+
+Bienvenue dans fdisk (util-linux 2.38.1).
+Les modifications resteront en mémoire jusqu'à écriture.
+Soyez prudent avant d'utiliser la commande d'écriture.
+
+
+Commande (m pour l'aide) : p
+Disque /dev/sdb : 15 GiB, 16106127360 octets, 31457280 secteurs
+Modèle de disque : QEMU HARDDISK
+Unités : secteur de 1 × 512 = 512 octets
+Taille de secteur (logique / physique) : 512 octets / 512 octets
+taille d'E/S (minimale / optimale) : 512 octets / 512 octets
+Type d'étiquette de disque : dos
+Identifiant de disque : 0xf847608f
+
+Périphérique Amorçage    Début      Fin Secteurs Taille Id Type
+/dev/sdb1                 2048 28313599 28311552  13,5G fd RAID Linux autodétecté
+/dev/sdb2             28313600 30410751  2097152     1G fd RAID Linux autodétecté
+/dev/sdb3             30410752 31457279  1046528   511M fd RAID Linux autodétecté
+
+Commande (m pour l'aide) : d
+Numéro de partition (1-3, 3 par défaut) : 1
+
+La partition 1 a été supprimée.
+
+Commande (m pour l'aide) : d
+Numéro de partition (2,3, 3 par défaut) : 2
+
+La partition 2 a été supprimée.
+
+Commande (m pour l'aide) : d
+Partition 3 sélectionnée
+La partition 3 a été supprimée.
+
+Commande (m pour l'aide) : 3
+3 : commande inconnue
+
+Commande (m pour l'aide) : w
+
+La table de partitions a été altérée.
+Appel d'ioctl() pour relire la table de partitions.
+Synchronisation des disques.
+
+root@SRV-DEB:/# 
+```
+En suivant ces étapes, vous avez supprimé toutes les partitions existantes sur le disque /dev/sdb. Ce disque est maintenant réinitialisé, prêt à être utilisé pour une nouvelle configuration ou pour d'autres usages.
+
+Nous revoilà au point de départ.
+
+![5_zerook](https://github.com/user-attachments/assets/19e26dc2-be26-461f-b49c-2c9be12b73f0)
 
