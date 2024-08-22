@@ -52,3 +52,71 @@ Comme le montre cette capture, les nouveaux disques sda et sdb de 15 Go sont bie
 2. **Partitionnement des nouveaux disques** :
 
 Après avoir confirmé que les disques sont reconnus, nous allons les partitionner en utilisant fdisk.
+
+### 3.3 : Partitionnement des nouveaux disques
+### 3.3 Recréer la même structure de partitionnement que `sdc` sur les disques `sda` et `sdb`
+
+#### 3.3.1 Création des partitions sur le disque `sda`
+
+1. **Créer la partition principale (`sda1`)** :
+   - Lancez `fdisk` :
+     ```bash
+     fdisk /dev/sda
+     ```
+   - Tapez `n` pour créer une nouvelle partition.
+   - Sélectionnez `p` pour créer une partition primaire.
+   - Choisissez `1` pour le numéro de partition.
+   - Appuyez sur `ENTER` pour accepter le secteur de début par défaut.
+   - Entrez la taille souhaitée (par exemple, `+13G` pour correspondre à `sdc1`).
+   
+2. **Créer la partition étendue (`sda2`)** :
+   - Dans `fdisk`, tapez `n` pour créer une nouvelle partition.
+   - Sélectionnez `e` pour créer une partition étendue.
+   - Choisissez `2` pour le numéro de partition.
+   - Acceptez les valeurs par défaut pour le secteur de début.
+   - Entrez `+975M` pour la taille de la partition
+  
+3. **Créer la partition logique pour le swap (`sda5`)** :
+   - Dans `fdisk`, tapez `n` pour créer une nouvelle partition.
+   - Sélectionnez `l` pour créer une partition logique à l'intérieur de la partition étendue.
+   - Acceptez les valeurs par défaut pour le secteur de début.
+   - .Acceptez les valeurs par défaut pour occuper tout l'espace restant.
+   - Tapez `t`, choisissez `5`, puis entrez `82` pour définir la partition comme Linux swap.
+   - Sauvegardez les modifications en tapant `w`.
+
+Capture d'écran du partitionnement de sda :
+
+![1a_partition](https://github.com/user-attachments/assets/eb1b8e76-a017-4d6b-b6e5-e17a0a46c18b)
+
+Oups, j'ai oublié de mettre un type de partition swap a sda5. Pas de soucis, il suffit de retourner dans fdisk et faire les changements voulus comme ci-dessous :
+
+![3_modifsda5](https://github.com/user-attachments/assets/a2a35a08-8404-4cea-9022-880501e4fe5b)
+
+##### Changer le type de partition pour `sda5`
+
+1. **Changer le type de partition pour `sda5`** :
+   - Tapez `t` pour changer le type d'une partition.
+   - Entrez `5` pour sélectionner la partition logique `sda5`.
+   - Entrez `82` pour définir le type de partition sur "Linux swap / Solaris".
+
+2. **Vérifier les modifications** :
+   - Tapez `p` pour afficher la table de partitions et vérifier que `sda5` est bien configurée en type `82`.
+
+3. **Écrire les modifications sur le disque** :
+   - Tapez `w` pour écrire les modifications sur le disque et quitter `fdisk`.
+
+
+#### 3.3.2 Répéter la même procédure pour le disque `sdb`
+
+- Répétez les mêmes étapes pour le disque `sdb` afin de recréer les partitions `sdb1`, `sdb2`, et `sdb5`.
+
+![4_patsdb](https://github.com/user-attachments/assets/792e91c2-066a-4cbf-84e6-1abf561ec650)
+
+**Vérifier la structure de chaque disque** :
+   - Utilisez la commande `fdisk -l` pour vérifier la nouvelle structure de partitions.
+
+![5_fdisk_l](https://github.com/user-attachments/assets/f99e9eae-08bd-47c9-b252-ef3b55a8f5d5)
+
+Comme vous le voyez, les disques sda et sdb ont maintenant la même structure de partitions que le disque sdc, ce qui est parfait pour la prochaine étape de la configuration du RAID 1.
+
+
